@@ -29,7 +29,7 @@ module.exports = function(app) {
         // This works because of our body parsing middleware
         var newFriend = req.body;
         // console.log(req)
-        console.log(req.body)
+        // console.log(req.body)
 
         // Using a RegEx Pattern to remove spaces from newCharacter
         // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html

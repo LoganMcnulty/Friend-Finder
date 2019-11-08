@@ -20,17 +20,31 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz&display=swap" rel="stylesheet">
 
+  <style>
+    body{
+      background: url('https://images.squarespace-cdn.com/content/v1/5a648464e5dd5b738891cad7/1544110420035-O27GLPBVSLJO3U3IFDMY/ke17ZwdGBToddI8pDm48kPTrHXgsMrSIMwe6YW3w1AZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0p52bY8kZn6Mpkp9xtPUVLhvLurswpbKwwoDWqBh58NLxQZMhB36LmtxTXHHtLwR3w/Heather+Rogers+Magic+Background+1920+x+1080+2.png?format=2500w') no-repeat center center fixed;
+      -webkit-background-size: auto;
+      -moz-background-size: auto;
+      background-size: auto;
+      -o-background-size: auto;
+      opacity: 90%;
+      margin-top: 7%;
+    }
+  </style>
+
 </head>
 
 <body>
 
   <div class="container">
 
-    <div class='row justify-content-center'>
-      <div class="jumbotron jumbotron-fluid col-10 ">
-        <div class="container">
-          <h1 class="display-4" style="text-align:center; font-family: 'Yanone Kaffeesatz', sans-serif; font-size: 40px">The Ultimate Friend Finding Survey</h1>
-        </div>
+    <div class="container">
+    <div class="row justify-content-center">
+      <div class="jumbotron col-9">
+        <h1 class="display-4" style="font-family: 'Yanone Kaffeesatz', sans-serif; font-size: 60px; text-align:center; margin-top:-5%; margin-bottom:-5%">
+            Answer questions, see the magic! 
+            <i class="fas fa-magic" style="margin-left: 2%"></i>
+        </h1>
       </div>
     </div>
 
@@ -39,9 +53,9 @@
     <div class="col-lg-8">
       <!-- Reservation Page -->
       <div class="card">
-        <div class="card-body">
+        <div class="card-body" id="question_name_input">
           
-          <form role="form">
+          <form role="form" id="name_image">
             <div class="form-group">
               <label for="userName">Name</label>
               <input type="text" class="form-control" id="userName">
@@ -61,8 +75,11 @@
 
 <!-- footer -->
   <footer class="footer">
-    <div class="container">
-      <p style="text-align:center; margin-top:2%"><a href="/api/friends">API Table Link</a> | <a target="_blank" href="https://github.com/LoganMcnulty/Friend-Finder">GitHub Repo</a>
+    <div class="container" style="background: #e9ecef; width: 35%;text-align:center; margin-top:4%">
+      <p>
+        <a href="/api/friends">API Table Link</a> | 
+        <a target="_blank" href="/">Home Page</a> | 
+        <a target="_blank" href="https://github.com/LoganMcnulty/Friend-Finder">GitHub Repo</a>
     </div>
   </footer>
 
@@ -74,7 +91,92 @@
 <!-- Java Script -->
 <script type="text/javascript">
 
+  var questions = [
+    {
+      question:"1",
+    },
+    {
+      question:"2",
+    },
+    {
+      question:"3",
+    },
+    {
+      question:"4",
+    },
+    {
+      question:"5",
+    },
+    {
+      question:"6",
+    },
+    {
+      question:"7",
+    },
+    {
+      question:"8",
+    },
+    {
+      question:"9",
+    },
+    {
+      question:"10",
+    }
+  ]
 
+  var surveyAnswers = [];
+  questionsAnswered = 0;
+
+ function questionSlides (newUser){
+
+  var questionDiv = $("<div>").addClass("form-group").attr("id","surveyForm")
+  var labelDiv = $("<label>").attr("for", "question").html(questions[questionsAnswered].question)
+
+  var selectDiv = $("<select>").attr("id", "userAnswer").addClass("custom-select").attr("aria-labelledby","dropdownMenuButton")
+    var option1 = $("<option>").text(`1 (Strongly Disagree)`).attr("value", 1)
+    var option2 = $("<option>").text(`2`).attr("value", 2)
+    var option3 = $("<option>").text(`3`).attr("value", 3)
+    var option4 = $("<option>").text(`4`).attr("value", 4)
+    var option5 = $("<option>").text(`5 (Strongly Agree)`).attr("value", 5)
+    selectDiv.append(option1).append(option2).append(option3).append(option4).append(option5)
+
+  var nextButton = $("<button>").addClass("btn btn-primary submit ").attr("style", "margin-top: 2%").text("Next Question").attr("id", "next")
+  questionDiv.append(labelDiv).append(selectDiv).append(nextButton)
+  $("#question_name_input").append(questionDiv)
+
+  $("#next").on("click", function(event) {
+    event.preventDefault();
+    questionsAnswered++;
+    console.log(questionsAnswered)
+    console.log(questions.length)
+    var userAnswer = $("#userAnswer").val();
+    newUser.survey.push(userAnswer)
+    if (newUser.survey.length === questions.length){
+    userPush(newUser)
+    }
+    labelDiv.html(questions[questionsAnswered].question)
+  })
+ }
+
+ function userPush(newUser){
+    console.log(newUser)
+    $("#surveyForm").hide()
+
+    $.post("/api/friends", newUser,
+      function(data) {
+        if (data) {
+          alert("Yay! You are added");
+          // finishedSurvey()
+        }
+        else {
+          alert("error");
+        }
+      });
+ }
+
+ function finshedSurvey(){
+
+ }
 
 $(".submit").on("click", function(event) {
     event.preventDefault();
@@ -83,64 +185,12 @@ $(".submit").on("click", function(event) {
     var newUser = {
       userName: $("#userName").val().trim(),
       userImage: $("#userImage").val().trim(),
+      survey: []
     };
-    var surveyAnswers = [1,2,3,4,5,6,7,8,9,10]
-    newUser.surveyAnswers = surveyAnswers
 
-    console.log(newUser);
+    $("#name_image").hide()
 
-    $.post("/api/friends", newUser,
-      function(data) {
-
-        if (data) {
-          alert("Yay! You are added");
-        }
-
-        else {
-          alert("error");
-        }
-
-        // Clear the form when submitting
-        $("#userName").val("");
-        $("#userImage").val("");
-      });
-    })
-
-    // var questions = [
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   },
-    //   {
-    //     question:"",
-    //   }
-    // ]
-      
-      // var answeredQuestions = [];
-      // var pick;
-      // var index;
+    questionSlides(newUser)
+  })
 
 </script>

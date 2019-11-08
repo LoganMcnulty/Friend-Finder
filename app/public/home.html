@@ -19,6 +19,17 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz&display=swap" rel="stylesheet">
 
+  <style>
+    body{
+      background: url('https://images.squarespace-cdn.com/content/v1/5a648464e5dd5b738891cad7/1544110420035-O27GLPBVSLJO3U3IFDMY/ke17ZwdGBToddI8pDm48kPTrHXgsMrSIMwe6YW3w1AZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0p52bY8kZn6Mpkp9xtPUVLhvLurswpbKwwoDWqBh58NLxQZMhB36LmtxTXHHtLwR3w/Heather+Rogers+Magic+Background+1920+x+1080+2.png?format=2500w') no-repeat center center fixed;
+      -webkit-background-size: auto;
+      -moz-background-size: auto;
+      background-size: auto;
+      -o-background-size: auto;
+      opacity: 90%;
+      margin-top: 7%;
+    }
+  </style>
 
 </head>
 
@@ -28,36 +39,52 @@
     <div class="jumbotron">
       <div class ="row">
         
-        <div class="col-6">
+        <div class="col-8">
             <h1 class="display-4" style="font-family: 'Yanone Kaffeesatz', sans-serif; font-size: 60px">
                     <i class="fab fa-facebook"></i>
                     Friend Finder</h1>
             <hr class="my-4">
-            <h2 class="lead" style="font-family: 'Yanone Kaffeesatz', sans-serif; font-size: 40px">Answer a few basic questions.</h2>
-            <h2 class="lead" style="font-family: 'Yanone Kaffeesatz', sans-serif; font-size: 40px">Then find the friend with the greatest compatibility!</h2>
+            <h2 class="lead" style="font-family: 'Yanone Kaffeesatz', sans-serif; font-size: 40px">1) Answer a few basic questions.</h2>
+            <h2 class="lead" style="font-family: 'Yanone Kaffeesatz', sans-serif; font-size: 40px">2) Let the Friend Wizard find you a buddy!</h2>
             <br>
             <div>
                 <a href="/survey">
                     <button type="button" class="btn-lg btn-primary">
                         <h4>
-                            <i class="fas fa-align-left"></i>
-                            Go to Survey
+                          <i class="fas fa-hat-wizard"></i>
+                            Consult The Wizard
                         </h4>
                     </button>
                 </a>
             </div>
+            <div>
+              <a href="/all-friends">
+                  <button type="button" class="btn-lg btn-primary" style="margin-top:2%">
+                      <h4>
+                        <i class="far fa-user-circle"></i>
+                          View Available Friends
+                      </h4>
+                  </button>
+              </a>
+          </div>
           </div>
 
-          <div class="col-6">
-            <img src="https://images-na.ssl-images-amazon.com/images/I/61LBTEaQTpL._SL1280_.jpg"class="img-fluid mx-auto" alt="Responsive image" style="display: block; width:15em; border-radius:10%">
+          <div class="col-4">
+            <img  
+              src="https://res.cloudinary.com/teepublic/image/private/s--I69JeppL--/t_Resized%20Artwork/c_fit,g_north_west,h_954,w_954/co_eae0c7,e_outline:48/co_eae0c7,e_outline:inner_fill:48/co_ffffff,e_outline:48/co_ffffff,e_outline:inner_fill:48/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_jpg,h_630,q_90,w_630/v1562961863/production/designs/5300349_0.jpg"
+              class="img-fluid mx-auto" 
+              alt="Responsive image" 
+              style="display: block; width:15em; margin-top:15%; border-radius:50%">
           </div>
 
       </div>
     </div>
 
     <footer class="footer">
-      <div class="container">
-        <p style="text-align:center; margin-top:2%"><a href="/api/friends">API Table Link</a> | <a target="_blank" href="https://github.com/LoganMcnulty/Friend-Finder">GitHub Repo</a>
+      <div class="container" style="background: #e9ecef; width: 30%;text-align:center; margin-top:4%">
+        <p>
+          <a href="/api/friends">API Table Link</a> | 
+          <a target="_blank" href="https://github.com/LoganMcnulty/Friend-Finder">GitHub Repo</a>
       </div>
     </footer>
 
