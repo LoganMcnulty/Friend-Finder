@@ -4,7 +4,7 @@
 <head>
 
   <meta charset="UTF-8">
-  <title>Friend Finder</title>
+  <title>Friend Wizard</title>
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -72,18 +72,16 @@
     </div>
   </div>
 
-
 <!-- footer -->
   <footer class="footer">
     <div class="container" style="background: #e9ecef; width: 35%;text-align:center; margin-top:4%">
       <p>
-        <a href="/api/friends">API Table Link</a> | 
+        <a target="_blank" href="/api/friends">API Friend Link</a> | 
         <a target="_blank" href="/">Home Page</a> | 
+        <a target="_blank" href="/all-friends">Available Friends</a> |
         <a target="_blank" href="https://github.com/LoganMcnulty/Friend-Finder">GitHub Repo</a>
     </div>
   </footer>
-
-  </div>
 
 </body>
 </html>
@@ -127,46 +125,58 @@
   var surveyAnswers = [];
   questionsAnswered = 0;
 
- function questionSlides (newUser){
+//function for displaying the survey in slide format, and pushing the responses to the newUser object
+  function questionSlides (newUser){
+    var questionDiv = $("<div>").addClass("form-group").attr("id","surveyForm")
+    var labelDiv = $("<label>").attr("for", "question").html(questions[questionsAnswered].question)
 
-  var questionDiv = $("<div>").addClass("form-group").attr("id","surveyForm")
-  var labelDiv = $("<label>").attr("for", "question").html(questions[questionsAnswered].question)
+    var selectDiv = $("<select>").attr("id", "userAnswer").addClass("custom-select").attr("aria-labelledby","dropdownMenuButton")
+      var option1 = $("<option>").text(`1 (Strongly Disagree)`).attr("value", 1)
+      var option2 = $("<option>").text(`2`).attr("value", 2)
+      var option3 = $("<option>").text(`3`).attr("value", 3)
+      var option4 = $("<option>").text(`4`).attr("value", 4)
+      var option5 = $("<option>").text(`5 (Strongly Agree)`).attr("value", 5)
+        selectDiv.append(option1).append(option2).append(option3).append(option4).append(option5)
 
-  var selectDiv = $("<select>").attr("id", "userAnswer").addClass("custom-select").attr("aria-labelledby","dropdownMenuButton")
-    var option1 = $("<option>").text(`1 (Strongly Disagree)`).attr("value", 1)
-    var option2 = $("<option>").text(`2`).attr("value", 2)
-    var option3 = $("<option>").text(`3`).attr("value", 3)
-    var option4 = $("<option>").text(`4`).attr("value", 4)
-    var option5 = $("<option>").text(`5 (Strongly Agree)`).attr("value", 5)
-    selectDiv.append(option1).append(option2).append(option3).append(option4).append(option5)
+    var nextButton = $("<button>").addClass("btn btn-primary submit ").attr("style", "margin-top: 2%").text("Next Question").attr("id", "next")
+    questionDiv.append(labelDiv).append(selectDiv).append(nextButton)
+    $("#question_name_input").append(questionDiv)
 
-  var nextButton = $("<button>").addClass("btn btn-primary submit ").attr("style", "margin-top: 2%").text("Next Question").attr("id", "next")
-  questionDiv.append(labelDiv).append(selectDiv).append(nextButton)
-  $("#question_name_input").append(questionDiv)
+    $("#next").on("click", function(event) {
+      event.preventDefault();
+      questionsAnswered++;
+      console.log(questionsAnswered)
+      console.log(questions.length)
+      var userAnswer = $("#userAnswer").val();
+      var userNum = parseInt(userAnswer)
+      newUser.surveyAnswers.push(userNum)
 
-  $("#next").on("click", function(event) {
-    event.preventDefault();
-    questionsAnswered++;
-    console.log(questionsAnswered)
-    console.log(questions.length)
-    var userAnswer = $("#userAnswer").val();
-    newUser.survey.push(userAnswer)
-    if (newUser.survey.length === questions.length){
-    userPush(newUser)
-    }
-    labelDiv.html(questions[questionsAnswered].question)
-  })
- }
+      var userTotalScore = 0;
 
+      for (i = 0; i <newUser.surveyAnswers; i++){
+        userTotalScore += newUser.surveyAnswers[i]
+      }
+
+      console.log(userTotalScore)
+
+      if (newUser.surveyAnswers.length === questions.length){
+        console.log(newUser.surveyAnswers)
+        userPush(newUser)
+      }
+
+      labelDiv.html(questions[questionsAnswered].question)
+    })
+  }
+
+//function for pushing the new user to the friends API 
  function userPush(newUser){
-    console.log(newUser)
     $("#surveyForm").hide()
 
     $.post("/api/friends", newUser,
       function(data) {
         if (data) {
           alert("Yay! You are added");
-          // finishedSurvey()
+          finishedSurvey(newUser)
         }
         else {
           alert("error");
@@ -174,23 +184,28 @@
       });
  }
 
- function finshedSurvey(){
-
+ function finishedSurvey(newUser){
+  $.ajax({ url: "/api/friends", method: "GET" })
+    .then(function(friendData) {
+      // log the friend data to the console
+        console.log(friendData);
+        console.log("------------------------------------");
+        console.log(newUser)
+    });
  }
 
-$(".submit").on("click", function(event) {
-    event.preventDefault();
-
-    // Here we grab the form elements
-    var newUser = {
-      userName: $("#userName").val().trim(),
-      userImage: $("#userImage").val().trim(),
-      survey: []
-    };
-
-    $("#name_image").hide()
-
-    questionSlides(newUser)
+//function for creating a new user object when the user enters their name and image URL
+  $(".submit").on("click", function(event) {
+      event.preventDefault();
+      var newUser = {
+        userName: $("#userName").val().trim(),
+        userImage: $("#userImage").val().trim(),
+        surveyAnswers: []
+      };
+    // hide the name / image input div
+      $("#name_image").hide()
+    // launch the question slides function
+      questionSlides(newUser)
   })
 
 </script>

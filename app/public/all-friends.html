@@ -4,7 +4,7 @@
 <head>
 
   <meta charset="UTF-8">
-  <title>Friend Finder</title>
+  <title>Friend Wizard</title>
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -50,10 +50,7 @@
         <div class="col-lg-12">
           <!-- Reservation Page -->
           <div class="card">
-            <div id="friendContainer">
-
-    
-            </div>
+            <div id="friendContainer"></div>
           </div>
         </div>
       </div>
@@ -61,8 +58,10 @@
     <footer class="footer">
       <div class="container" style="background: #e9ecef; width: 30%;text-align:center; margin-top:4%">
         <p>
-          <a href="/api/friends">API Table Link</a> | 
+          <a target="_blank" href="/api/friends">API Friend Link</a> | 
+          <a id = "clearFriends" href="#">Clear Data</a> |
           <a target="_blank" href="/">Home Page</a> |
+          <a target="_blank" href="/survey">Survey Page</a> |
           <a target="_blank" href="https://github.com/LoganMcnulty/Friend-Finder">GitHub Repo</a>
       </div>
     </footer>
@@ -74,44 +73,56 @@
 <!-- Java Script -->
 <script type="text/javascript">
 
+//function GETs all of the friends data from the friends API, and populates the available friends div
   function runFriendsQuery() {
-    // The AJAX function uses the URL of our API to GET the data associated with it (initially set to localhost)
+    // The AJAX function uses the URL of our API to GET the friends data
     $.ajax({ url: "/api/friends", method: "GET" })
       .then(function(friendData) {
 
-        // Here we then log the tableData to console, where it will show up as an object.
-        console.log(friendData);
-        console.log("------------------------------------");
+        // log the friend data to the console
+          console.log(friendData);
+          console.log("------------------------------------");
 
-        // Loop through and display each of the customers
-        for (var i = 0; i < friendData.length; i++) {
+        // Loop through and display all friends
+          for (var i = 0; i < friendData.length; i++) {
+            console.log(friendData.length)
 
-          // Get a reference to the tableList element and populate it with tables
-          var friendList = $("#friendContainer");
-          var friendDiv = $("<div>").addClass("card").attr("style", "width: 15rem; text-align:center; float:left; margin:1%")
-          var friendImg = $("<img>").addClass("card-img-top").attr("src", friendData[i].userImage).attr("alt", "Card image cap").attr("style", "width:50%; margin:auto; padding: 1%;")
-          var friendDivBody = $("<div>").addClass("card-body")
-          var friendName = $("<h4>").html(`Name: ${friendData[i].userName}`)
-          var friendScore = $("<h4>").html(`Score: ${friendScore}`)
+            // for (var i =0; i < friendData.length; i++){
+            //   console.log(friendData[i].surveyAnswers)
+            //   // var stringToNum = []
+            //   // var surveyNum = parseInt(friendData[i].surveyAnswers[i])
+            //   // stringToNum.push(surveyNum)
+            //   // console.log(stringToNum)
+            // }
 
-          friendDiv.append(friendImg)
-          friendDivBody.append(friendName).append(friendScore)
-          friendDiv.append(friendDivBody)
-        
-          // <div class="card" style="width: 18rem;">
-          //   <img src="..." class="card-img-top" alt="...">
-          //   <div class="card-body">
-          //     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          //   </div>
-          // </div>
+          // Get a reference to the friend container in the HTML element and populate it with friend cards
+            var friendList = $("#friendContainer");
+            var friendDiv = $("<div>").addClass("card").attr("style", "width: 15rem; text-align:center; float:left; margin:1%")
+            var friendImg = $("<img>").addClass("card-img-top").attr("src", friendData[i].userImage).attr("alt", "Card image cap").attr("style", "width:50%; margin:auto; padding: 1%;")
+            var friendDivBody = $("<div>").addClass("card-body")
+            var friendName = $("<h4>").html(`Name: ${friendData[i].userName}`)
+            var friendScore = $("<h5>").html(`Score: ${friendScore}`)
 
-          // Then display the fields in the HTML (Section Name, Date, URL)
+            friendDiv.append(friendImg)
+            friendDivBody.append(friendName).append(friendScore)
+            friendDiv.append(friendDivBody)
 
-          friendList.append(friendDiv);
+            friendList.append(friendDiv);
         }
       });
   }
 
-  runFriendsQuery()
+//function to remove all data 
+  function clearFriends() {
+    alert("Clearing all friend data...");
 
+  // Clear the friends data and refresh the page
+    $.ajax({ url: "/api/clearFriends", method: "POST" }).then(function() {
+      $("#friendContainer").empty();
+    });
+  }
+
+  //on click function for handling clearing of data, and run friends query function
+    $("#clearFriends").on("click", clearFriends);
+    runFriendsQuery()
 </script>

@@ -1,5 +1,6 @@
-var allUsers = require("../data/friends.js");
 
+//require the friends data in the dat folder
+  var allUsers = require("../data/friends.js");
 
 // ===============================================================================
 // ROUTING
@@ -12,33 +13,32 @@ module.exports = function(app) {
   });
 
 // Display a single friend, or return false
-    // app.get("/api/friends/:friend", function(req, res) {
-    //     var chosen = req.params.friend;
-    //     console.log(chosen);
-    //     for (var i = 0; i < allUsers.length; i++) {
-    //     if (chosen === allUsers[i].name) {
-    //         return res.json(allUsers[i]);
-    //     }
-    //     }
-    //     return res.json(false);
-    // });
+  app.get("/api/friends/:friend", function(req, res) {
+      var friend = req.params.friend;
+      for (var i = 0; i < allUsers.length; i++) {
+        if (friend === allUsers[i].userName) {
+            return res.json(allUsers[i]);
+        }
+      }
+      return res.json(false)
+  });
 
-// Create New Friends - takes in JSON input
-    app.post("/api/friends", function(req, res) {
-        // req.body hosts is equal to the JSON post sent from the user
-        // This works because of our body parsing middleware
-        var newFriend = req.body;
-        // console.log(req)
-        // console.log(req.body)
+// post to the friends API
+  app.post("/api/friends", function(req, res) {
+    var newFriend = req.body;
 
-        // Using a RegEx Pattern to remove spaces from newCharacter
-        // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-        newFriend.userName = newFriend.userName.replace(/\s+/g, "").toLowerCase();
+    // Using a RegEx Pattern to remove spaces from new friend
+      newFriend.userName = newFriend.userName.replace(/\s+/g, "").toLowerCase();
+      console.log(newFriend);
+      allUsers.push(newFriend);
 
-        console.log(newFriend);
+    res.json(newFriend);
+  });
 
-        allUsers.push(newFriend);
-
-        res.json(newFriend);
-    });
+//route for removing all friends
+  app.post("/api/clearFriends", function(req,res){
+    allUsers.length = 0;
+    console.log(allUsers)
+    res.json({ ok: true });
+  })
 }
