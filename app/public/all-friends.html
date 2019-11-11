@@ -93,7 +93,7 @@
             var friendImg = $("<img>").addClass("card-img-top").attr("src", friendData[i].userImage).attr("alt", "Card image cap").attr("style", "width:50%; margin:auto; padding: 1%;")
             var friendDivBody = $("<div>").addClass("card-body")
             var friendName = $("<h4>").html(`Name: ${friendData[i].userName}`)
-            var friendScore = $("<h5>").html(`Score: ${friendScore}`)
+            var friendScore = $("<h5>").html(`Score: ${friendData[i].surveyScore}`)
 
             friendDiv.append(friendImg)
             friendDivBody.append(friendName).append(friendScore)

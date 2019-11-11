@@ -53,15 +53,15 @@
     <div class="col-lg-8">
       <!-- Reservation Page -->
       <div class="card">
-        <div class="card-body" id="question_name_input">
+        <div class="card-body justify-content-center" id="question_name_input" style="text-align:center">
           
           <form role="form" id="name_image">
             <div class="form-group">
-              <label for="userName">Name</label>
+              <label for="userName" style="float:left">Name</label>
               <input type="text" class="form-control" id="userName">
             </div>
             <div class="form-group">
-              <label for="userImage">Image URL</label>
+              <label for="userImage" style="float:left">Image URL</label>
               <input type="text" class="form-control" id="userImage">
             </div>
             <button type="submit" class="btn btn-primary submit">Submit</button>
@@ -149,20 +149,13 @@
       var userNum = parseInt(userAnswer)
       newUser.surveyAnswers.push(userNum)
 
-      // var userTotalScore = 0;
-
-      // for (i = 0; i <newUser.surveyAnswers; i++){
-      //   userTotalScore += newUser.surveyAnswers[i]
-      // }
-
-      // console.log(`total score: ${userTotalScore}`)
-
       if (newUser.surveyAnswers.length === questions.length){
         console.log(newUser.surveyAnswers)
         userPush(newUser)
       }
-
-      labelDiv.html(questions[questionsAnswered].question)
+      if (newUser.surveyAnswers.length < questions.length){
+        labelDiv.html(questions[questionsAnswered].question)
+      }
     })
   }
 
@@ -176,7 +169,6 @@
     $.post("/api/friends", newUser,
       function(data) {
         if (data) {
-          alert("Yay! You are added");
           finishedSurvey(newUser)
         }
         else {
@@ -198,14 +190,31 @@
           var potentialFriendNum = parseInt(friendData[i].surveyScore)
           var matchPotential = Math.abs(potentialFriendNum - newUser.surveyScore)
           console.log(`match potential: ${matchPotential}`)
-          
-          // if (matchPotential <= 3){
-          //   console.log(`youre friend is ${friendData[i].userName}`)
-          //   return (`your friend is ${friendData[i].userName}`)
-          // }
-          // else{
-          //   return console.log("failed to find a friend")
-          // }
+
+          if (matchPotential <= 5){
+            console.log(`youre friend is ${friendData[i].userName}`)
+            function showFriend(){
+              var friendResult = $("<h3>").text(`Congratulations, your friend is ${friendData[i].userName}!`)
+
+              var friendDiv = $("<div>").addClass("card").attr("style", "width: 15rem; text-align:center; float:left; margin:3% 0% 0% 30%")
+              var friendImg = $("<img>").addClass("card-img-top").attr("src", friendData[i].userImage).attr("alt", "Card image cap").attr("style", "width:50%; margin:auto; padding: 1%;")
+              var friendDivBody = $("<div>").addClass("card-body")
+              var friendName = $("<h4>").html(`Name: ${friendData[i].userName}`)
+              var friendScore = $("<h5>").html(`Score: ${friendData[i].surveyScore}`)
+
+              $("#question_name_input").append(friendResult)
+              friendDiv.append(friendImg)
+              friendDivBody.append(friendName).append(friendScore)
+              friendDiv.append(friendDivBody)
+
+              friendResult.append(friendDiv);
+            }
+            return showFriend()
+          }
+
+          if (i+1 === friendData.length){
+            console.log("Failed to find a friend")
+          }
         }
     });
  }
