@@ -1,5 +1,5 @@
 # Friend Wizard
-- Javascript friend compatibility application requiring the express web application framework, and hosted on Heroku. 
+- Javascript friend compatibility application requiring the express web application framework, hosted on Heroku. 
 
 **ABOUT THIS APP** 
 - The Friend Wizard is a javascript applications that recreates the process in which dating websites were created. A user creates a profile, completes a survey, and javascript compares the respsones to the survey to other members of the website. 
